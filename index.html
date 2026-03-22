@@ -10,93 +10,297 @@
 
     <style>
         :root {
-            /* DEFAULT SPACE THEME */
-            --main: #00e5ff;     /* Cosmic Cyan */
-            --gold: #b026ff;     /* Nebula Purple */
-            --dark: #030014;     /* Deep Space Black */
-            --glow: 0 0 25px rgba(0, 229, 255, 0.6);
-            --card-bg: rgba(10, 10, 20, 0.9);
+            /* SPACE THEME PALETTE */
+            --main: #00e5ff;     
+            --gold: #b026ff;     
+            --dark: #030014;     
+            --glow: 0 0 30px rgba(0, 229, 255, 0.6);
+            --card-bg: rgba(10, 10, 25, 0.7);
+            --font-main: 'Rajdhani', sans-serif;
+            --font-accent: 'Orbitron', sans-serif;
+            --vignette: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.5));
         }
 
         /* NATURE THEME OVERRIDE */
         body.nature-theme {
-            --main: #4cd137;     /* Vibrant Leaf Green */
-            --gold: #f1c40f;     /* Earthy Gold/Sunlight */
-            --dark: #0a1708;     /* Deep Forest Black */
-            --glow: 0 0 25px rgba(76, 209, 55, 0.6);
-            --card-bg: rgba(10, 20, 10, 0.9);
+            --main: #4cd137;     
+            --gold: #f1c40f;     
+            --dark: #0a1708;     
+            --glow: 0 0 30px rgba(76, 209, 55, 0.6);
+            --card-bg: rgba(20, 30, 20, 0.7);
+            --vignette: radial-gradient(circle, transparent 40%, rgba(10,23,8,0.8));
         }
 
+        /* RESET & BASE STYLES */
         * { 
             cursor: crosshair; 
             box-sizing: border-box; 
-            /* Added smooth transitions for theme switching */
-            transition: background-color 0.8s ease, color 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease;
+            transition: background 0.8s ease, color 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        body { background: var(--dark); color: #fff; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; margin: 0; scroll-behavior: smooth; }
 
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.5; }
+        body { 
+            background: var(--dark); 
+            color: #fff; 
+            font-family: var(--font-main); 
+            overflow-x: hidden; 
+            margin: 0; 
+            scroll-behavior: smooth; 
+        }
 
-        /* NAVBAR */
-        .navbar { background: rgba(0,0,0,0.95) !important; border-bottom: 2px solid var(--main); z-index: 1000; }
-        .nav-link { font-family: 'Orbitron'; color: white !important; letter-spacing: 2px; font-size: 0.75rem; transition: 0.3s; }
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--vignette);
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        #bg-canvas { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            z-index: -1; 
+            opacity: 0.6; 
+        }
+
+        /* NAVBAR - SLEEK TRANSITIONS */
+        .navbar { 
+            background: rgba(0,0,0,0.8) !important; 
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--main); 
+            z-index: 1000; 
+            padding: 15px 0;
+        }
+        .navbar-brand span { color: var(--main); text-shadow: var(--glow); }
+        .nav-link { 
+            font-family: var(--font-accent); 
+            color: white !important; 
+            letter-spacing: 3px; 
+            font-size: 0.8rem; 
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 0; width: 0%; height: 2px;
+            background: var(--main);
+            transition: 0.4s;
+        }
+        .nav-link:hover::after { width: 100%; }
         .nav-link:hover { color: var(--main) !important; text-shadow: var(--glow); }
 
-        /* HERO */
-        .hero { height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        h1 { font-family: 'Syncopate'; font-size: clamp(2.5rem, 8vw, 6rem); margin: 0; }
-        h1 span { color: var(--main); }
+        /* HERO SECTION */
+        .hero { 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+            background: radial-gradient(circle at center, rgba(0,229,255,0.05) 0%, transparent 70%);
+        }
+        h1 { 
+            font-family: 'Syncopate'; 
+            font-size: clamp(3rem, 10vw, 7rem); 
+            margin: 0; 
+            text-transform: uppercase;
+            letter-spacing: -5px;
+        }
+        h1 span { color: var(--main); filter: drop-shadow(var(--glow)); }
 
-        .status-bar { margin-top: 10px; font-family: 'Orbitron'; font-size: 0.9rem; color: var(--gold); letter-spacing: 3px; }
-        .pulse { display: inline-block; width: 10px; height: 10px; background: #00ff00; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00ff00; animation: blink 1.5s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .status-bar { 
+            margin-top: 15px; 
+            font-family: var(--font-accent); 
+            font-size: 1rem; 
+            color: var(--gold); 
+            letter-spacing: 5px; 
+            text-transform: uppercase;
+        }
+        .pulse { 
+            display: inline-block; 
+            width: 12px; height: 12px; 
+            background: #00ff00; 
+            border-radius: 50%; 
+            margin-right: 15px; 
+            box-shadow: 0 0 15px #00ff00; 
+            animation: blink 2s infinite; 
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } }
 
-        .ip-box { background: #000; border: 2px solid var(--main); padding: 15px 40px; font-family: 'Orbitron'; font-weight: 900; margin-top: 30px; cursor: pointer; transition: 0.4s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
-        .ip-box:hover { background: var(--main); box-shadow: var(--glow); transform: scale(1.05); color: #000; }
+        /* THE LEGENDARY IP BOX */
+        .ip-box { 
+            background: rgba(0,0,0,0.6); 
+            border: 2px solid var(--main); 
+            padding: 20px 60px; 
+            font-family: var(--font-accent); 
+            font-weight: 900; 
+            margin-top: 40px; 
+            cursor: pointer; 
+            position: relative;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); 
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+        .ip-box::before {
+            content: 'CLICK TO COPY';
+            position: absolute;
+            top: -100%; left: 0; width: 100%; height: 100%;
+            background: var(--main);
+            color: #000;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+        }
+        .ip-box:hover::before { top: 0; }
+        .ip-box:hover { 
+            box-shadow: var(--glow); 
+            transform: scale(1.05) translateY(-5px); 
+        }
 
-        /* SOCIAL BUTTONS */
-        .social-hub { margin-top: 40px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-        .soc-btn { padding: 10px 25px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.7rem; border: 1px solid #fff; color: #fff; text-decoration: none; transition: 0.3s; clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%); }
-        .soc-discord { border-color: #5865F2; } .soc-discord:hover { background: #5865F2; box-shadow: 0 0 15px #5865F2; border-color: transparent;}
-        .soc-insta { border-color: #E1306C; } .soc-insta:hover { background: #E1306C; box-shadow: 0 0 15px #E1306C; border-color: transparent;}
-        .soc-yt { border-color: #FF0000; } .soc-yt:hover { background: #FF0000; box-shadow: 0 0 15px #FF0000; border-color: transparent;}
+        /* SOCIAL HUB */
+        .social-hub { margin-top: 50px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+        .soc-btn { 
+            padding: 12px 30px; 
+            font-family: var(--font-accent); 
+            font-weight: 900; 
+            font-size: 0.75rem; 
+            border: 2px solid #fff; 
+            color: #fff; 
+            text-decoration: none; 
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%); 
+            background: transparent;
+            z-index: 1;
+        }
+        .soc-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 100%;
+            transition: 0.4s;
+            z-index: -1;
+        }
+        .soc-btn:hover::after { width: 100%; }
+        .soc-btn:hover { color: #fff; transform: translateY(-8px); border-color: transparent; }
 
-        /* SECTIONS */
-        .section-title { font-family: 'Syncopate'; font-size: 2rem; color: var(--main); margin: 80px 0 40px; text-align: center; letter-spacing: 8px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .soc-discord:hover::after { background: #5865F2; box-shadow: 0 0 20px #5865F2; }
+        .soc-insta:hover::after { background: #E1306C; box-shadow: 0 0 20px #E1306C; }
+        .soc-yt:hover::after { background: #FF0000; box-shadow: 0 0 20px #FF0000; }
+
+        /* SECTIONS & CARDS */
+        .section-title { 
+            font-family: 'Syncopate'; 
+            font-size: 2.5rem; 
+            color: var(--main); 
+            margin: 100px 0 60px; 
+            text-align: center; 
+            letter-spacing: 12px; 
+            position: relative;
+        }
+        .section-title::before {
+            content: '';
+            position: absolute;
+            bottom: -15px; left: 50%; transform: translateX(-50%);
+            width: 100px; height: 3px; background: var(--main);
+        }
 
         .demon-card {
-            background: var(--card-bg); border: 1px solid #222; padding: 30px; transition: 0.4s; height: 100%; display: flex; flex-direction: column; justify-content: space-between; clip-path: polygon(0 0, 92% 0, 100% 8%, 100% 100%, 8% 100%, 0 92%);
+            background: var(--card-bg); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            padding: 40px; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            clip-path: polygon(0 0, 92% 0, 100% 8%, 100% 100%, 8% 100%, 0 92%);
+            backdrop-filter: blur(10px);
         }
-        .demon-card:hover { border-color: var(--main); transform: translateY(-5px); box-shadow: var(--glow); }
+        .demon-card h3 { font-family: var(--font-accent); font-size: 1.3rem; letter-spacing: 2px; }
+        .demon-card:hover { 
+            border-color: var(--main); 
+            transform: translateY(-15px) scale(1.02); 
+            box-shadow: var(--glow); 
+            background: rgba(255,255,255,0.05);
+        }
 
-        .price { font-size: 2.2rem; font-family: 'Orbitron'; color: var(--gold); font-weight: 900; margin: 15px 0; }
-        .buy-btn { background: var(--main); color: #000; border: none; width: 100%; padding: 12px; font-weight: 900; font-family: 'Orbitron'; transition: 0.3s; }
-        .buy-btn:hover { background: #fff; color: #000; box-shadow: var(--glow); }
+        .price { font-size: 2.5rem; font-family: var(--font-accent); color: var(--gold); font-weight: 900; margin: 20px 0; text-shadow: 0 0 10px rgba(176,38,255,0.3); }
 
-        /* COSMOS OS */
-        #ai-shell { position: fixed; bottom: 110px; right: 40px; width: 450px; height: 500px; background: rgba(5, 5, 5, 0.98); border: 2px solid var(--main); display: none; flex-direction: column; z-index: 10000; border-radius: 8px; box-shadow: 0 0 40px #000; }
-        .os-content { flex-grow: 1; padding: 20px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; }
-        .os-input { background: #000; padding: 15px; border-top: 1px solid #222; display: flex; }
-        .os-input input { background: transparent; border: none; color: white; width: 100%; outline: none; }
+        /* CRAZY BUY BUTTON ANIMATION */
+        .buy-btn { 
+            background: linear-gradient(90deg, var(--main), var(--gold), var(--main));
+            background-size: 200% auto;
+            color: #000; 
+            border: none; 
+            width: 100%; 
+            padding: 15px; 
+            font-weight: 900; 
+            font-family: var(--font-accent); 
+            transition: 0.5s;
+            letter-spacing: 2px;
+        }
+        .buy-btn:hover { 
+            background-position: right center;
+            color: #fff;
+            box-shadow: var(--glow);
+            letter-spacing: 4px;
+        }
+
+        /* INFERNO / GAIA OS */
+        #ai-shell { 
+            position: fixed; 
+            bottom: 110px; 
+            right: 40px; 
+            width: 450px; 
+            height: 550px; 
+            background: rgba(5, 5, 10, 0.95); 
+            border: 2px solid var(--main); 
+            display: none; 
+            flex-direction: column; 
+            z-index: 10000; 
+            border-radius: 12px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            backdrop-filter: blur(15px);
+        }
+        .os-header { background: var(--main); color: #000; padding: 5px 15px; font-family: var(--font-accent); font-weight: 900; font-size: 0.7rem; display: flex; justify-content: space-between; }
+        .os-content { flex-grow: 1; padding: 25px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.6; }
+        .os-input { background: rgba(0,0,0,0.5); padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; }
+        .os-input input { background: transparent; border: none; color: var(--main); width: 100%; outline: none; font-family: 'Fira Code', monospace; }
         
-        #trigger { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: var(--main); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 3px solid white; z-index: 10001; font-size: 1.8rem; box-shadow: var(--glow); }
-        #trigger:hover { transform: scale(1.1); }
+        #trigger, #theme-toggle { 
+            position: fixed; 
+            bottom: 30px; 
+            width: 70px; 
+            height: 70px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            border: 3px solid #fff; 
+            z-index: 10001; 
+            font-size: 2rem; 
+            box-shadow: var(--glow); 
+        }
+        #trigger { right: 30px; background: var(--main); }
+        #theme-toggle { left: 30px; background: var(--dark); border-color: var(--main); }
+        #trigger:hover, #theme-toggle:hover { transform: scale(1.2) rotate(15deg); }
 
-        /* THEME TOGGLE BUTTON */
-        #theme-toggle { position: fixed; bottom: 30px; left: 30px; width: 65px; height: 65px; background: var(--dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 3px solid var(--main); z-index: 10001; font-size: 1.8rem; box-shadow: var(--glow); transition: 0.4s; }
-        #theme-toggle:hover { transform: scale(1.1); background: var(--main); border-color: #fff; }
+        .modal-content { background: #050505; border: 3px solid var(--main); color: #fff; font-family: var(--font-accent); border-radius: 0; }
+        
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--dark); }
+        ::-webkit-scrollbar-thumb { background: var(--main); border-radius: 10px; }
 
-        .modal-content { background: #000; border: 2px solid var(--main); color: #fff; font-family: 'Orbitron'; }
     </style>
 </head>
-<body>
+<body class="space-theme">
 
 <canvas id="bg-canvas"></canvas>
 
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="#" style="font-family: 'Syncopate';">Norden-<span>Mc</span></a>
-        <div class="ms-auto d-flex gap-3">
+        <a class="navbar-brand fw-bold" href="#" style="font-family: 'Syncopate';">NORDEN-<span>MC</span></a>
+        <div class="ms-auto d-flex gap-4">
             <a href="#vote" class="nav-link">VOTE</a>
             <a href="#shop" class="nav-link">SHOP</a>
             <a href="#council" class="nav-link">COUNCIL</a>
@@ -105,29 +309,48 @@
 </nav>
 
 <section class="hero">
-    <h1>Norden-<span>Mc</span></h1>
-
-    <div class="status-bar">
-        <span class="pulse"></span>
-        <span id="player-count">SCANNING COSMOS...</span>
-    </div>
-
-    <div class="ip-box" onclick="copyIP()">play.nordenmc.fun</div>
-
-    <div class="social-hub">
-        <a href="https://discord.gg/cF4JMwJW" target="_blank" class="soc-btn soc-discord">DISCORD</a>
-        <a href="https://www.instagram.com/itadori_teacher001/" target="_blank" class="soc-btn soc-insta">INSTAGRAM</a>
-        <a href="https://www.youtube.com/" target="_blank" class="soc-btn soc-yt">YOUTUBE</a>
+    <div class="container">
+        <h1>Norden-<span>Mc</span></h1>
+        <div class="status-bar">
+            <span class="pulse"></span>
+            <span id="player-count">INITIALIZING HUD...</span>
+        </div>
+        <div class="ip-box" onclick="copyIP()">
+            PLAY.NORDENMC.FUN
+        </div>
+        <div class="social-hub">
+            <a href="https://discord.gg/cF4JMwJW" target="_blank" class="soc-btn soc-discord">DISCORD</a>
+            <a href="https://www.instagram.com/itadori_teacher001/" target="_blank" class="soc-btn soc-insta">INSTAGRAM</a>
+            <a href="https://www.youtube.com/" target="_blank" class="soc-btn soc-yt">YOUTUBE</a>
+        </div>
     </div>
 </section>
 
 <section class="container py-5" id="vote">
     <h2 class="section-title">VOTE PORTAL</h2>
-    <p class="text-center mb-5 opacity-75">EACH VOTE REDEEMS 1x VOTE KEY IN-GAME</p>
+    <p class="text-center mb-5 opacity-50" style="letter-spacing: 2px;">SECURE YOUR REWARDS BY SUPPORTING THE REALM</p>
     <div class="row g-4">
-        <div class="col-md-4"><div class="demon-card text-center"><h3>VOTE LINK 1</h3><button class="buy-btn mt-3" onclick="window.open('https://minecraft-mp.com/server/355309/vote/')">OPEN LINK</button></div></div>
-        <div class="col-md-4"><div class="demon-card text-center"><h3>VOTE LINK 2</h3><button class="buy-btn mt-3" onclick="window.open('https://minecraft-server-list.com/server/518471/vote/')">OPEN LINK</button></div></div>
-        <div class="col-md-4"><div class="demon-card text-center"><h3>VOTE LINK 3</h3><button class="buy-btn mt-3" onclick="window.open('https://topg.org/minecraft-servers/server-680059-changeme#vote')">OPEN LINK</button></div></div>
+        <div class="col-md-4">
+            <div class="demon-card text-center">
+                <h3>VOTE LINK 1</h3>
+                <p class="small opacity-50">MINECRAFT-MP</p>
+                <button class="buy-btn mt-3" onclick="window.open('https://minecraft-mp.com/server/355309/vote/')">ACCESS PORTAL</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="demon-card text-center">
+                <h3>VOTE LINK 2</h3>
+                <p class="small opacity-50">SERVER-LIST</p>
+                <button class="buy-btn mt-3" onclick="window.open('https://minecraft-server-list.com/server/518471/vote/')">ACCESS PORTAL</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="demon-card text-center">
+                <h3>VOTE LINK 3</h3>
+                <p class="small opacity-50">TOPG PORTAL</p>
+                <button class="buy-btn mt-3" onclick="window.open('https://topg.org/minecraft-servers/server-680059-changeme#vote')">ACCESS PORTAL</button>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -157,32 +380,37 @@
 <section class="container py-5 mb-5" id="council">
     <h2 class="section-title">THE COUNCIL</h2>
     <div class="row g-4 text-center">
-        <div class="col-md-4"><div class="demon-card"><h3>Aayush</h3><p class="fw-bold" style="color:var(--main)">OWNER</p></div></div>
-        <div class="col-md-4"><div class="demon-card"><h3>Hydra</h3><p class="fw-bold" style="color:var(--main)">OWNER</p></div></div>
-        <div class="col-md-4"><div class="demon-card"><h3>PVP_PRO</h3><p class="fw-bold" style="color:var(--main)">OWNER</p></div></div>
+        <div class="col-md-4"><div class="demon-card"><h3>Aayush</h3><p class="fw-bold" style="color:var(--main); letter-spacing: 3px;">OWNER</p></div></div>
+        <div class="col-md-4"><div class="demon-card"><h3>Hydra</h3><p class="fw-bold" style="color:var(--main); letter-spacing: 3px;">OWNER</p></div></div>
+        <div class="col-md-4"><div class="demon-card"><h3>PVP_PRO</h3><p class="fw-bold" style="color:var(--main); letter-spacing: 3px;">OWNER</p></div></div>
     </div>
 </section>
 
 <div class="modal fade" id="gateModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-4 text-center">
-            <h3 class="mb-4">GATEWAY</h3>
+        <div class="modal-content p-5 text-center">
+            <h2 class="mb-4" style="color:var(--main)">SECURE GATEWAY</h2>
+            <p class="mb-4 opacity-75">Select your preferred transaction method.</p>
             <div class="d-grid gap-3">
-                <button class="buy-btn" onclick="window.open('https://demonsmp.craftingstore.net/')">WEBSTORE (AUTO)</button>
-                <button class="buy-btn" style="background:#5865F2; color:white;" onclick="window.open('https://discord.gg/cF4JMwJW')">DISCORD (UPI)</button>
+                <button class="buy-btn" onclick="window.open('https://demonsmp.craftingstore.net/')">AUTO-WEBSTORE</button>
+                <button class="buy-btn" style="background: #5865F2; color: white;" onclick="window.open('https://discord.gg/cF4JMwJW')">DISCORD (UPI/MANUAL)</button>
             </div>
         </div>
     </div>
 </div>
 
 <div id="ai-shell">
+    <div class="os-header">
+        <span>CORE_OS_v3.0.4</span>
+        <span>ENCRYPTED</span>
+    </div>
     <div class="os-content" id="os-log">
-        <div style="color:var(--main)">> SYSTEM ONLINE.</div>
-        <div style="color:var(--gold)">> Status: Neural Bridge Stable. Type 'HELP'.</div>
+        <div style="color:var(--main)">> [SYSTEM] DEPLOYMENT SUCCESSFUL.</div>
+        <div style="color:var(--gold)">> WELCOME TO NORDEN-MC INTERFACE. TYPE 'HELP'.</div>
     </div>
     <div class="os-input">
-        <span class="me-2" style="color:var(--main)">></span>
-        <input type="text" id="os-input" placeholder="Directive..." autocomplete="off">
+        <span class="me-2" style="color:var(--main)">#</span>
+        <input type="text" id="os-input" placeholder="Enter command..." autocomplete="off">
     </div>
 </div>
 
@@ -194,39 +422,28 @@
     const log = document.getElementById('os-log');
     const input = document.getElementById('os-input');
     const shell = document.getElementById('ai-shell');
-
-    // UPDATED SERVER ADDRESS
     const serverIP = "play.nordenmc.fun";
 
-    // LIVE PLAYER COUNT LOGIC
+    // 1. DYNAMIC PLAYER COUNTER
     async function updatePlayers() {
         const countBox = document.getElementById('player-count');
         const pulse = document.querySelector('.pulse');
-
         try {
-            const timestamp = new Date().getTime();
-            const response = await fetch(`https://api.mcstatus.io/v2/status/java/${serverIP}?t=${timestamp}`);
-
-            if (!response.ok) throw new Error("API Limit");
-            const data = await response.json();
-
+            const res = await fetch(`https://api.mcstatus.io/v2/status/java/${serverIP}`);
+            const data = await res.json();
             if (data.online) {
-                countBox.innerHTML = `${data.players.online} / ${data.players.max} WARRIORS ONLINE`;
+                countBox.innerHTML = `${data.players.online} / ${data.players.max} PLAYERS ONLINE`;
                 pulse.style.background = "#00ff00";
-                pulse.style.boxShadow = "0 0 10px #00ff00";
             } else {
-                countBox.innerHTML = "SYSTEM CLOSED (OFFLINE)";
+                countBox.innerHTML = "SERVER OFFLINE";
                 pulse.style.background = "var(--main)";
-                pulse.style.boxShadow = "var(--glow)";
             }
-        } catch (error) {
-            countBox.innerHTML = "PINGING SERVER...";
-        }
+        } catch (e) { countBox.innerHTML = "FETCHING STATUS..."; }
     }
-
     updatePlayers();
-    setInterval(updatePlayers, 15000);
+    setInterval(updatePlayers, 30000);
 
+    // 2. TERMINAL LOGIC
     function toggleOS() {
         shell.style.display = (shell.style.display === 'flex') ? 'none' : 'flex';
         if(shell.style.display === 'flex') input.focus();
@@ -235,126 +452,101 @@
     function addLog(msg, col) {
         const div = document.createElement('div');
         div.style.color = col || "#fff";
-        div.style.marginBottom = "5px";
         div.innerHTML = `> ${msg}`;
         log.appendChild(div);
         log.scrollTop = log.scrollHeight;
     }
 
-    function openGate() { new bootstrap.Modal(document.getElementById('gateModal')).show(); }
-    function copyIP() { navigator.clipboard.writeText(serverIP); alert("IP COPIED: " + serverIP); }
-
     input.addEventListener('keypress', (e) => {
         if(e.key === 'Enter') {
             const val = input.value.trim().toLowerCase();
             addLog(val.toUpperCase(), "#555");
-
-            if(['hi', 'yo', 'hello', 'hey'].some(w => val.includes(w))) {
-                addLog("GREETINGS. SYSTEM OPTIMIZED.", "var(--gold)");
-            }
-            else if(val === 'owner' || val === 'staff' || val === 'utkarsh') {
-                addLog("--- [COUNCIL DATA] ---", "var(--main)");
+            
+            if(val === 'help') {
+                addLog("COMMANDS: IP, SHOP, VOTE, OWNER, SCAN, CLEAR", "var(--main)");
+            } else if(val === 'ip') {
+                addLog("COORDINATES FOUND: " + serverIP, "var(--gold)");
+            } else if(val === 'scan') {
+                addLog("SCANNING FOR MALWARE...", "#fff");
+                setTimeout(() => addLog("THREAT LEVEL: ZERO.", "var(--main)"), 800);
+                setTimeout(() => addLog("SERVER STABILITY: 99.9%", "var(--main)"), 1500);
+            } else if(val === 'owner') {
+                addLog("COUNCIL MEMBERS: Aayush, Hydra, PVP_PRO", "var(--main)");
                 addLog("ARCHITECT: Utkarsh Pandey", "#fff");
-                addLog("OWNERS: Aayush, Hydra, PVP_PRO", "#fff");
-            }
-            else if(val === 'help') {
-                addLog("DIRECTIVES: OWNER, SHOP, VOTE, IP, CLEAR", "var(--main)");
-            }
-            else if(val === 'shop') {
+            } else if(val === 'clear') {
+                log.innerHTML = "";
+            } else if(val === 'shop') {
                 document.getElementById('shop').scrollIntoView();
-            }
-            else if(val === 'vote') {
+                toggleOS();
+            } else if(val === 'vote') {
                 document.getElementById('vote').scrollIntoView();
-            }
-            else if(val === 'clear') {
-                log.innerHTML = "<div style='color:var(--main)'>> TERMINAL CLEAR.</div>";
-            }
-            else {
-                addLog("DIRECTIVE NOT RECOGNIZED.", "red");
+                toggleOS();
+            } else {
+                addLog("UNRECOGNIZED DIRECTIVE.", "red");
             }
             input.value = "";
         }
     });
 
-    // DYNAMIC BACKGROUND ENGINE (SPACE -> NATURE)
-    let currentTheme = 'space';
+    // 3. THEME ENGINE & CANVAS
+    let theme = 'space';
     function switchTheme() {
-        const body = document.body;
-        const themeBtn = document.getElementById('theme-toggle');
-        const osBtn = document.getElementById('trigger');
-        const osLogTitle = document.querySelector('#os-log div:first-child');
-        
-        if (currentTheme === 'space') {
-            body.classList.add('nature-theme');
-            themeBtn.innerHTML = '🌿';
-            osBtn.innerHTML = '🦉';
-            osLogTitle.innerHTML = "> GAIA_OS ONLINE.";
-            currentTheme = 'nature';
-        } else {
-            body.classList.remove('nature-theme');
-            themeBtn.innerHTML = '🌌';
-            osBtn.innerHTML = '🛸';
-            osLogTitle.innerHTML = "> SYSTEM ONLINE.";
-            currentTheme = 'space';
-        }
-        initParticles(); // Reboot visual particles
+        theme = (theme === 'space') ? 'nature' : 'space';
+        document.body.className = theme + '-theme';
+        document.getElementById('theme-toggle').innerHTML = (theme === 'space') ? '🌌' : '🌿';
+        document.getElementById('trigger').innerHTML = (theme === 'space') ? '🛸' : '🦉';
+        initParticles();
     }
 
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    
-    // Resize dynamically
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth; 
-        canvas.height = window.innerHeight;
-        initParticles();
-    });
+    let particles = [];
 
-    let p = [];
     function initParticles() {
-        p = [];
-        const particleCount = currentTheme === 'space' ? 150 : 60; // More stars, fewer leaves
-        for(let i=0; i<particleCount; i++) {
-            p.push({
-                x: Math.random() * canvas.width, 
-                y: Math.random() * canvas.height, 
-                s: Math.random() * (currentTheme === 'space' ? 2 : 4) + 1, // Leaves are bigger
-                vx: (Math.random() - 0.5) * 1,
-                vy: currentTheme === 'space' ? (Math.random() * 0.5 + 0.1) : (Math.random() * 2 + 0.5),
-                sway: Math.random() * Math.PI * 2
+        particles = [];
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const count = (theme === 'space') ? 120 : 50;
+        for(let i=0; i<count; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 3 + 1,
+                speed: Math.random() * 1 + 0.2,
+                angle: Math.random() * Math.PI * 2
             });
         }
     }
-    initParticles();
 
-    function draw() {
-        ctx.clearRect(0,0,canvas.width, canvas.height); 
-        
-        p.forEach(i => { 
-            if (currentTheme === 'space') {
-                // Draw Stars
-                ctx.fillStyle = "rgba(0, 229, 255, " + (Math.random() * 0.5 + 0.5) + ")";
-                ctx.beginPath();
-                ctx.arc(i.x, i.y, i.s, 0, Math.PI * 2);
-                ctx.fill();
-                i.y -= i.vy; 
-                if(i.y < 0) { i.y = canvas.height; i.x = Math.random() * canvas.width; }
+    function animate() {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        particles.forEach(p => {
+            ctx.fillStyle = (theme === 'space') ? 'rgba(0, 229, 255, 0.8)' : 'rgba(76, 209, 55, 0.8)';
+            if(theme === 'space') {
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size/2, 0, Math.PI*2); ctx.fill();
+                p.y -= p.speed; if(p.y < 0) p.y = canvas.height;
             } else {
-                // Draw Falling Leaves
-                ctx.fillStyle = "rgba(76, 209, 55, 0.7)";
-                ctx.beginPath();
-                ctx.ellipse(i.x, i.y, i.s, i.s*2, i.sway, 0, Math.PI * 2);
-                ctx.fill();
-                i.y += i.vy; 
-                i.x += Math.sin(i.sway) * 1;
-                i.sway += 0.05;
-                if(i.y > canvas.height) { i.y = -10; i.x = Math.random() * canvas.width; }
+                ctx.beginPath(); ctx.ellipse(p.x, p.y, p.size, p.size*2, p.angle, 0, Math.PI*2); ctx.fill();
+                p.y += p.speed; p.x += Math.sin(p.y/20); p.angle += 0.02;
+                if(p.y > canvas.height) p.y = -20;
             }
         });
-        requestAnimationFrame(draw);
+        requestAnimationFrame(animate);
     }
-    draw();
+
+    window.addEventListener('resize', initParticles);
+    initParticles();
+    animate();
+
+    // 4. UTILS
+    function openGate() { new bootstrap.Modal(document.getElementById('gateModal')).show(); }
+    function copyIP() {
+        navigator.clipboard.writeText(serverIP);
+        const box = document.querySelector('.ip-box');
+        const original = box.innerHTML;
+        box.innerHTML = "COPIED SUCCESSFULLY!";
+        setTimeout(() => box.innerHTML = "PLAY.NORDENMC.FUN", 2000);
+    }
 </script>
 </body>
 </html>
