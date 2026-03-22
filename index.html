@@ -379,10 +379,11 @@
 
 <section class="container py-5 mb-5" id="council">
     <h2 class="section-title">THE COUNCIL</h2>
-    <div class="row g-4 text-center">
-        <div class="col-md-4"><div class="demon-card"><h3>Aayush</h3><p class="fw-bold" style="color:var(--main); letter-spacing: 3px;">OWNER</p></div></div>
-        <div class="col-md-4"><div class="demon-card"><h3>Hydra</h3><p class="fw-bold" style="color:var(--main); letter-spacing: 3px;">OWNER</p></div></div>
-        <div class="col-md-4"><div class="demon-card"><h3>PVP_PRO</h3><p class="fw-bold" style="color:var(--main); letter-spacing: 3px;">OWNER</p></div></div>
+    <div class="row g-4 text-center justify-content-center">
+        <div class="col-md-3"><div class="demon-card"><h3>Aayush</h3><p class="fw-bold" style="color:var(--main); letter-spacing: 3px;">OWNER</p></div></div>
+        <div class="col-md-3"><div class="demon-card"><h3>Hydra</h3><p class="fw-bold" style="color:var(--main); letter-spacing: 3px;">OWNER</p></div></div>
+        <div class="col-md-3"><div class="demon-card"><h3>PVP_PRO</h3><p class="fw-bold" style="color:var(--main); letter-spacing: 3px;">OWNER</p></div></div>
+        <div class="col-md-3"><div class="demon-card"><h3>Sitesizer</h3><p class="fw-bold" style="color:var(--main); letter-spacing: 3px;">OWNER</p></div></div>
     </div>
 </section>
 
@@ -425,7 +426,6 @@
     const serverIP = "play.nordenmc.fun";
 
     // --- DISCORD WEBHOOK CONFIG ---
-    // PASTE YOUR URL BETWEEN THE QUOTES BELOW:
     const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1485289614997590153/4zO-djBpwYuBj1DEPT_-q-hFRfNWIHO6eIDKJ6mSlmD1djWIp-XVQxSCK5Q8lbpFG20b";
 
     // Application Variables
@@ -469,7 +469,6 @@
         log.scrollTop = log.scrollHeight;
     }
 
-    // Discord Transmission Function
     async function sendToDiscord(data) {
         if (DISCORD_WEBHOOK_URL.includes("YOUR_DISCORD_WEBHOOK")) {
             addLog("CRITICAL: DISCORD WEBHOOK NOT CONFIGURED IN CODE.", "red");
@@ -553,7 +552,7 @@
                     setTimeout(() => addLog("THREAT LEVEL: ZERO.", "var(--main)"), 800);
                     setTimeout(() => addLog("STABILITY: 100%", "var(--main)"), 1500);
                 } else if(cmd === 'owner') {
-                    addLog("COUNCIL: Aayush, Hydra, PVP_PRO", "var(--main)");
+                    addLog("COUNCIL: Aayush, Hydra, PVP_PRO, Sitesizer", "var(--main)");
                     addLog("ARCHITECT: Utkarsh Pandey", "#fff");
                 } else if(cmd === 'clear') {
                     log.innerHTML = "";
@@ -621,7 +620,6 @@
     initParticles();
     animate();
 
-    // 4. UTILS
     function openGate() { new bootstrap.Modal(document.getElementById('gateModal')).show(); }
     function copyIP() {
         navigator.clipboard.writeText(serverIP);
