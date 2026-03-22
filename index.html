@@ -401,16 +401,16 @@
 
 <div id="ai-shell">
     <div class="os-header">
-        <span>CORE_OS_v3.0.4</span>
-        <span>ENCRYPTED</span>
+        <span>GENESIS_OS_v4.5</span>
+        <span id="webhook-status">LINKED</span>
     </div>
     <div class="os-content" id="os-log">
-        <div style="color:var(--main)">> [SYSTEM] DEPLOYMENT SUCCESSFUL.</div>
-        <div style="color:var(--gold)">> WELCOME TO NORDEN-MC INTERFACE. TYPE 'HELP'.</div>
+        <div style="color:var(--main)">> [SYSTEM] NEURAL LINK ESTABLISHED.</div>
+        <div style="color:var(--gold)">> TYPE 'APPLY' TO START STAFF RECRUITMENT.</div>
     </div>
     <div class="os-input">
         <span class="me-2" style="color:var(--main)">#</span>
-        <input type="text" id="os-input" placeholder="Enter command..." autocomplete="off">
+        <input type="text" id="os-input" placeholder="Enter directive..." autocomplete="off">
     </div>
 </div>
 
@@ -424,6 +424,15 @@
     const shell = document.getElementById('ai-shell');
     const serverIP = "play.nordenmc.fun";
 
+    // --- DISCORD WEBHOOK CONFIG ---
+    // PASTE YOUR URL BETWEEN THE QUOTES BELOW:
+    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1485289614997590153/4zO-djBpwYuBj1DEPT_-q-hFRfNWIHO6eIDKJ6mSlmD1djWIp-XVQxSCK5Q8lbpFG20b";
+
+    // Application Variables
+    let appStage = 0;
+    let appData = { name: "", age: "", discord: "", reason: "" };
+    let isApplying = false;
+
     // 1. DYNAMIC PLAYER COUNTER
     async function updatePlayers() {
         const countBox = document.getElementById('player-count');
@@ -434,11 +443,13 @@
             if (data.online) {
                 countBox.innerHTML = `${data.players.online} / ${data.players.max} PLAYERS ONLINE`;
                 pulse.style.background = "#00ff00";
+                pulse.style.boxShadow = "0 0 15px #00ff00";
             } else {
                 countBox.innerHTML = "SERVER OFFLINE";
-                pulse.style.background = "var(--main)";
+                pulse.style.background = "red";
+                pulse.style.boxShadow = "0 0 15px red";
             }
-        } catch (e) { countBox.innerHTML = "FETCHING STATUS..."; }
+        } catch (e) { countBox.innerHTML = "HUD ERROR: RECONNECTING..."; }
     }
     updatePlayers();
     setInterval(updatePlayers, 30000);
@@ -452,37 +463,109 @@
     function addLog(msg, col) {
         const div = document.createElement('div');
         div.style.color = col || "#fff";
+        div.style.marginBottom = "8px";
         div.innerHTML = `> ${msg}`;
         log.appendChild(div);
         log.scrollTop = log.scrollHeight;
     }
 
+    // Discord Transmission Function
+    async function sendToDiscord(data) {
+        if (DISCORD_WEBHOOK_URL.includes("YOUR_DISCORD_WEBHOOK")) {
+            addLog("CRITICAL: DISCORD WEBHOOK NOT CONFIGURED IN CODE.", "red");
+            return;
+        }
+
+        const payload = {
+            embeds: [{
+                title: "🛡️ NEW STAFF APPLICATION",
+                color: 58655,
+                fields: [
+                    { name: "In-Game Name", value: data.name, inline: true },
+                    { name: "Age", value: data.age, inline: true },
+                    { name: "Discord Tag", value: data.discord, inline: true },
+                    { name: "Reasoning", value: data.reason }
+                ],
+                footer: { text: "Norden-Mc Web Interface" },
+                timestamp: new Date()
+            }]
+        };
+
+        try {
+            const response = await fetch(DISCORD_WEBHOOK_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            if (response.ok) {
+                addLog("TRANSMISSION SUCCESSFUL. CHECK DISCORD.", "#00ff00");
+            } else {
+                addLog("TRANSMISSION FAILED. CHECK WEBHOOK PERMS.", "red");
+            }
+        } catch (e) {
+            addLog("NETWORK FAILURE: UNABLE TO REACH DISCORD.", "red");
+        }
+    }
+
+    function handleApplication(val) {
+        if (appStage === 0) {
+            appData.name = val;
+            appStage = 1;
+            addLog("IDENTIFIED. STEP 2: WHAT IS YOUR AGE?", "var(--gold)");
+        } else if (appStage === 1) {
+            appData.age = val;
+            appStage = 2;
+            addLog("LOGGED. STEP 3: WHAT IS YOUR DISCORD TAG?", "var(--gold)");
+        } else if (appStage === 2) {
+            appData.discord = val;
+            appStage = 3;
+            addLog("ALMOST DONE. STEP 4: WHY SHOULD WE HIRE YOU?", "var(--gold)");
+        } else if (appStage === 3) {
+            appData.reason = val;
+            isApplying = false;
+            appStage = 0;
+            addLog("INITIATING DATA UPLOAD...", "var(--main)");
+            sendToDiscord(appData);
+        }
+    }
+
     input.addEventListener('keypress', (e) => {
         if(e.key === 'Enter') {
-            const val = input.value.trim().toLowerCase();
+            const val = input.value.trim();
+            if(!val) return;
+            
             addLog(val.toUpperCase(), "#555");
             
-            if(val === 'help') {
-                addLog("COMMANDS: IP, SHOP, VOTE, OWNER, SCAN, CLEAR", "var(--main)");
-            } else if(val === 'ip') {
-                addLog("COORDINATES FOUND: " + serverIP, "var(--gold)");
-            } else if(val === 'scan') {
-                addLog("SCANNING FOR MALWARE...", "#fff");
-                setTimeout(() => addLog("THREAT LEVEL: ZERO.", "var(--main)"), 800);
-                setTimeout(() => addLog("SERVER STABILITY: 99.9%", "var(--main)"), 1500);
-            } else if(val === 'owner') {
-                addLog("COUNCIL MEMBERS: Aayush, Hydra, PVP_PRO", "var(--main)");
-                addLog("ARCHITECT: Utkarsh Pandey", "#fff");
-            } else if(val === 'clear') {
-                log.innerHTML = "";
-            } else if(val === 'shop') {
-                document.getElementById('shop').scrollIntoView();
-                toggleOS();
-            } else if(val === 'vote') {
-                document.getElementById('vote').scrollIntoView();
-                toggleOS();
+            if (isApplying) {
+                handleApplication(val);
             } else {
-                addLog("UNRECOGNIZED DIRECTIVE.", "red");
+                const cmd = val.toLowerCase();
+                if(cmd === 'help') {
+                    addLog("COMMANDS: IP, SHOP, VOTE, OWNER, SCAN, APPLY, CLEAR", "var(--main)");
+                } else if(cmd === 'apply') {
+                    isApplying = true;
+                    addLog("RECRUITMENT PROTOCOL ACTIVATED.", "var(--main)");
+                    addLog("STEP 1: WHAT IS YOUR IN-GAME NAME?", "var(--gold)");
+                } else if(cmd === 'ip') {
+                    addLog("COORDINATES FOUND: " + serverIP, "var(--gold)");
+                } else if(cmd === 'scan') {
+                    addLog("SCANNING CORE FILES...", "#fff");
+                    setTimeout(() => addLog("THREAT LEVEL: ZERO.", "var(--main)"), 800);
+                    setTimeout(() => addLog("STABILITY: 100%", "var(--main)"), 1500);
+                } else if(cmd === 'owner') {
+                    addLog("COUNCIL: Aayush, Hydra, PVP_PRO", "var(--main)");
+                    addLog("ARCHITECT: Utkarsh Pandey", "#fff");
+                } else if(cmd === 'clear') {
+                    log.innerHTML = "";
+                } else if(cmd === 'shop') {
+                    document.getElementById('shop').scrollIntoView();
+                    toggleOS();
+                } else if(cmd === 'vote') {
+                    document.getElementById('vote').scrollIntoView();
+                    toggleOS();
+                } else {
+                    addLog("UNRECOGNIZED DIRECTIVE.", "red");
+                }
             }
             input.value = "";
         }
@@ -543,7 +626,6 @@
     function copyIP() {
         navigator.clipboard.writeText(serverIP);
         const box = document.querySelector('.ip-box');
-        const original = box.innerHTML;
         box.innerHTML = "COPIED SUCCESSFULLY!";
         setTimeout(() => box.innerHTML = "PLAY.NORDENMC.FUN", 2000);
     }
